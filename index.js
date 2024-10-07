@@ -206,6 +206,31 @@ const updateRecipeByTitle = async (recipeTitle, dataToUpdate) => {
   }
 };
 
+//API to delete Recipe by Id ()
+app.delete("/recipes/:recipeId", async (req, res) => {
+  try {
+    const deletedRecipe = await deleteRecipeById(req.params.recipeId);
+    if (deletedRecipe) {
+      res
+        .status(200)
+        .json({ message: "Recipe deleted successfully", deletedRecipe });
+    } else {
+      res.status(404).json({ error: "Recipe not found" });
+    }
+  } catch (error) {
+    res.status(500).json({ error: "Failed to delete Recipe" });
+    console.log(error);
+  }
+});
+
+const deleteRecipeById = async (recipeId) => {
+  try {
+    return await Recipe.findByIdAndDelete(recipeId);
+  } catch (error) {
+    throw error;
+  }
+};
+
 const PORT = process.env.PORT;
 
 app.listen(PORT, () => {
